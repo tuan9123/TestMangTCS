@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Ultimate Cyber Network Monitor</title>
+<title>ULTIMATE CYBER NETWORK OS</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
@@ -20,8 +21,8 @@
 
 body{
   background:#020617;
-  overflow:hidden;
   color:white;
+  overflow:hidden;
 }
 
 /* BACKGROUND */
@@ -30,8 +31,8 @@ body{
   position:fixed;
   inset:0;
   background:
-    radial-gradient(circle at top left,#0ea5e944,transparent 35%),
-    radial-gradient(circle at bottom right,#9333ea44,transparent 35%),
+    radial-gradient(circle at top left,#00ffff22,transparent 35%),
+    radial-gradient(circle at bottom right,#9333ea33,transparent 35%),
     #020617;
 }
 
@@ -57,132 +58,111 @@ body{
   }
 }
 
-/* CONTAINER */
+/* MATRIX */
+
+.matrix{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.08;
+}
+
+/* MAIN */
 
 .container{
   position:relative;
   z-index:2;
   width:100%;
   height:100vh;
-  padding:20px;
 
   display:grid;
-  grid-template-columns:1.3fr 1fr;
+  grid-template-columns:1.2fr 1fr 1fr;
   gap:20px;
+
+  padding:20px;
 }
 
 /* CARD */
 
 .card{
-  background:rgba(15,23,42,.7);
+  background:rgba(15,23,42,.75);
   border:1px solid rgba(255,255,255,.08);
-  backdrop-filter:blur(16px);
+  backdrop-filter:blur(18px);
 
-  border-radius:25px;
-  padding:25px;
+  border-radius:24px;
+
+  padding:22px;
+
+  overflow:hidden;
+  position:relative;
 
   box-shadow:
-    0 0 40px rgba(0,255,255,.06),
+    0 0 40px rgba(0,255,255,.05),
     inset 0 0 20px rgba(255,255,255,.02);
-
-  position:relative;
-  overflow:hidden;
 }
 
 .card::before{
   content:"";
   position:absolute;
-  width:300px;
-  height:300px;
+  width:260px;
+  height:260px;
+
   background:radial-gradient(circle,#0ea5e922,transparent);
-  top:-150px;
-  right:-150px;
+
+  top:-130px;
+  right:-130px;
 }
 
 /* TITLE */
 
 .title{
-  font-size:32px;
-  font-weight:bold;
+  font-size:24px;
   color:#38bdf8;
   margin-bottom:20px;
-  text-shadow:0 0 20px #0ea5e9;
+  font-weight:bold;
+  text-shadow:0 0 15px #0ea5e9;
 }
 
 /* SIGNAL */
 
 .signal-area{
-  height:300px;
+  height:260px;
+
   display:flex;
   justify-content:center;
   align-items:flex-end;
-  gap:18px;
+  gap:16px;
 }
 
 .bar{
-  width:55px;
+  width:48px;
   background:#1e293b;
   border-radius:18px;
   transition:.4s;
-  position:relative;
 }
 
 .bar.active{
   background:linear-gradient(to top,#22c55e,#4ade80);
+
   box-shadow:
     0 0 25px #22c55e,
-    0 0 60px #22c55e88;
+    0 0 50px #22c55e88;
 }
 
-.bar::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top,transparent,#ffffff33);
-  border-radius:18px;
-}
-
-.b1{height:70px;}
-.b2{height:120px;}
-.b3{height:170px;}
-.b4{height:220px;}
-.b5{height:270px;}
-
-/* INFO */
-
-.info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-top:20px;
-}
-
-.info-box{
-  background:#0f172a;
-  padding:22px;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.05);
-}
-
-.label{
-  color:#94a3b8;
-  font-size:13px;
-  margin-bottom:10px;
-}
-
-.value{
-  font-size:28px;
-  font-weight:bold;
-}
+.b1{height:60px;}
+.b2{height:110px;}
+.b3{height:160px;}
+.b4{height:210px;}
+.b5{height:260px;}
 
 /* STATUS */
 
 .status{
   margin-top:20px;
-  padding:18px;
-  border-radius:18px;
+  padding:16px;
+  border-radius:16px;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
 }
 
@@ -201,33 +181,88 @@ body{
   color:#f87171;
 }
 
+/* INFO */
+
+.info-grid{
+  margin-top:20px;
+
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.info{
+  background:#0f172a;
+  border-radius:18px;
+  padding:18px;
+}
+
+.label{
+  color:#94a3b8;
+  font-size:12px;
+}
+
+.value{
+  font-size:24px;
+  margin-top:8px;
+  font-weight:bold;
+}
+
 /* BUTTON */
 
 .btn{
-  margin-top:18px;
   width:100%;
-  padding:18px;
+  padding:16px;
   border:none;
-  border-radius:18px;
+  border-radius:16px;
+  margin-top:15px;
 
   background:linear-gradient(90deg,#0ea5e9,#2563eb);
 
   color:white;
-  font-size:17px;
   cursor:pointer;
   transition:.3s;
+  font-size:15px;
   font-weight:bold;
 }
 
 .btn:hover{
   transform:scale(1.02);
-  box-shadow:0 0 25px #0ea5e9;
+  box-shadow:0 0 20px #0ea5e9;
+}
+
+/* TERMINAL */
+
+.terminal{
+  height:250px;
+  overflow:auto;
+  background:black;
+  color:#22c55e;
+  padding:14px;
+  border-radius:16px;
+  font-size:13px;
+}
+
+/* LOG */
+
+.log{
+  height:250px;
+  overflow:auto;
+}
+
+.log-item{
+  background:#0f172a;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  border-left:4px solid #0ea5e9;
+  font-size:12px;
 }
 
 /* RADAR */
 
 .radar{
-  height:320px;
+  height:300px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -246,8 +281,8 @@ body{
 
 .scan{
   position:absolute;
-  width:160px;
-  height:160px;
+  width:170px;
+  height:170px;
 
   background:linear-gradient(
     45deg,
@@ -269,38 +304,26 @@ body{
   }
 }
 
-/* LOG */
-
-.log{
-  height:300px;
-  overflow:auto;
-}
-
-.log-item{
-  background:#0f172a;
-  padding:12px;
-  border-radius:12px;
-  margin-bottom:10px;
-  border-left:4px solid #0ea5e9;
-  font-size:13px;
-}
-
 /* ALERT */
 
 .alert{
   position:fixed;
-  top:25px;
-  right:25px;
+  top:20px;
+  right:20px;
+
   background:#ef4444;
+
   padding:18px 24px;
+
   border-radius:18px;
-  font-weight:bold;
 
-  box-shadow:0 0 30px rgba(239,68,68,.5);
+  transform:translateX(400px);
 
-  transform:translateX(500px);
   transition:.5s;
+
   z-index:999;
+
+  font-weight:bold;
 }
 
 .alert.show{
@@ -309,7 +332,7 @@ body{
 
 /* RESPONSIVE */
 
-@media(max-width:1100px){
+@media(max-width:1300px){
 
   .container{
     grid-template-columns:1fr;
@@ -327,8 +350,10 @@ body{
   <div class="grid"></div>
 </div>
 
+<canvas class="matrix" id="matrix"></canvas>
+
 <div class="alert" id="alertBox">
-🚫 NETWORK CONNECTION LOST
+🚫 INTERNET CONNECTION LOST
 </div>
 
 <div class="container">
@@ -340,7 +365,7 @@ body{
 <div class="card">
 
 <div class="title">
-📡 ULTIMATE NETWORK MONITOR
+📡 CYBER NETWORK OS
 </div>
 
 <div class="signal-area">
@@ -358,46 +383,76 @@ body{
 </div>
 
 <button class="btn" onclick="updateSignal()">
-🔄 REFRESH NETWORK
+🔄 REFRESH
 </button>
 
 <button class="btn" onclick="exportTXT()">
-📥 EXPORT TXT REPORT
+📥 EXPORT TXT
 </button>
 
 <button class="btn" onclick="exportJSON()">
-🧠 EXPORT JSON REPORT
+🧠 EXPORT JSON
 </button>
 
 <div class="info-grid">
 
-<div class="info-box">
+<div class="info">
 <div class="label">DOWNLOAD</div>
 <div class="value" id="speed">
 120 Mbps
 </div>
 </div>
 
-<div class="info-box">
+<div class="info">
 <div class="label">PING</div>
 <div class="value" id="ping">
 14 ms
 </div>
 </div>
 
-<div class="info-box">
+<div class="info">
 <div class="label">SIGNAL</div>
 <div class="value" id="signal">
 92%
 </div>
 </div>
 
-<div class="info-box">
+<div class="info">
 <div class="label">NETWORK</div>
 <div class="value" id="network">
 5G
 </div>
 </div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- CENTER -->
+
+<div>
+
+<div class="card">
+
+<div class="title">
+📈 REALTIME GRAPH
+</div>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+<div class="card">
+
+<div class="title">
+💻 HACKER TERMINAL
+</div>
+
+<div class="terminal" id="terminal">
+
+> SYSTEM INITIALIZED...
 
 </div>
 
@@ -449,25 +504,108 @@ body{
 
 <script>
 
+/* MATRIX EFFECT */
+
+const matrix =
+  document.getElementById("matrix");
+
+const ctx =
+  matrix.getContext("2d");
+
+matrix.width =
+  window.innerWidth;
+
+matrix.height =
+  window.innerHeight;
+
+const letters =
+  "01";
+
+const fontSize = 14;
+
+const columns =
+  matrix.width / fontSize;
+
+const drops = [];
+
+for(let x=0;x<columns;x++){
+
+  drops[x]=1;
+
+}
+
+function drawMatrix(){
+
+  ctx.fillStyle =
+    "rgba(0,0,0,0.05)";
+
+  ctx.fillRect(
+    0,
+    0,
+    matrix.width,
+    matrix.height
+  );
+
+  ctx.fillStyle="#0f0";
+
+  ctx.font =
+    fontSize + "px monospace";
+
+  for(let i=0;i<drops.length;i++){
+
+    const text =
+      letters[
+        Math.floor(
+          Math.random()*letters.length
+        )
+      ];
+
+    ctx.fillText(
+      text,
+      i*fontSize,
+      drops[i]*fontSize
+    );
+
+    if(
+      drops[i]*fontSize >
+      matrix.height &&
+      Math.random() > 0.975
+    ){
+
+      drops[i]=0;
+
+    }
+
+    drops[i]++;
+
+  }
+
+}
+
+setInterval(drawMatrix,35);
+
+/* NETWORK */
+
 const bars =
   document.querySelectorAll(".bar");
 
 const logs =
   document.getElementById("logs");
 
-let networkLogs = [];
+const terminal =
+  document.getElementById("terminal");
 
-let stats = {
-  disconnects:0,
-  checks:0,
-  uptime:0
+let networkLogs=[];
+
+let stats={
+  disconnects:0
 };
 
 function random(min,max){
 
   return Math.floor(
     Math.random()*(max-min+1)
-  ) + min;
+  )+min;
 
 }
 
@@ -484,11 +622,23 @@ function addLog(text){
   const div =
     document.createElement("div");
 
-  div.className = "log-item";
+  div.className =
+    "log-item";
 
-  div.innerHTML = full;
+  div.innerHTML =
+    full;
 
   logs.prepend(div);
+
+}
+
+function terminalLog(text){
+
+  terminal.innerHTML +=
+    `<br>> ${text}`;
+
+  terminal.scrollTop =
+    terminal.scrollHeight;
 
 }
 
@@ -500,6 +650,14 @@ function playAlert(){
     );
 
   audio.play();
+
+}
+
+function voiceAlert(text){
+
+  speechSynthesis.speak(
+    new SpeechSynthesisUtterance(text)
+  );
 
 }
 
@@ -518,6 +676,62 @@ function showAlert(){
 
 }
 
+/* CHART */
+
+const chartCtx =
+  document.getElementById("chart");
+
+const chart =
+  new Chart(chartCtx,{
+
+    type:"line",
+
+    data:{
+      labels:[],
+
+      datasets:[{
+
+        label:"Ping",
+
+        data:[],
+
+        borderColor:"#00ffff",
+
+        tension:.4
+
+      }]
+    },
+
+    options:{
+      responsive:true,
+
+      scales:{
+        y:{
+          beginAtZero:true
+        }
+      }
+    }
+
+  });
+
+function updateChart(value){
+
+  if(chart.data.labels.length > 20){
+
+    chart.data.labels.shift();
+
+    chart.data.datasets[0].data.shift();
+
+  }
+
+  chart.data.labels.push("");
+
+  chart.data.datasets[0].data.push(value);
+
+  chart.update();
+
+}
+
 function updateSignal(){
 
   if(!navigator.onLine){
@@ -527,9 +741,6 @@ function updateSignal(){
 
   }
 
-  stats.checks++;
-  stats.uptime++;
-
   let speed =
     random(20,200);
 
@@ -537,9 +748,9 @@ function updateSignal(){
     random(5,80);
 
   let signal =
-    random(25,100);
+    random(30,100);
 
-  const networkTypes = [
+  const types=[
     "5G",
     "WiFi 6",
     "Fiber",
@@ -548,18 +759,16 @@ function updateSignal(){
   ];
 
   const network =
-    networkTypes[
-      random(0,networkTypes.length-1)
-    ];
+    types[random(0,types.length-1)];
 
   document.getElementById("speed").innerHTML =
-    speed + " Mbps";
+    speed+" Mbps";
 
   document.getElementById("ping").innerHTML =
-    ping + " ms";
+    ping+" ms";
 
   document.getElementById("signal").innerHTML =
-    signal + "%";
+    signal+"%";
 
   document.getElementById("network").innerHTML =
     network;
@@ -571,7 +780,7 @@ function updateSignal(){
   });
 
   let active =
-    Math.ceil(signal / 20);
+    Math.ceil(signal/20);
 
   for(let i=0;i<active;i++){
 
@@ -610,8 +819,14 @@ function updateSignal(){
 
   }
 
+  updateChart(ping);
+
   addLog(
-    `Signal ${signal}% | Ping ${ping}ms | ${speed} Mbps`
+    `Signal ${signal}% | Ping ${ping}ms`
+  );
+
+  terminalLog(
+    `Latency ${ping}ms | ${speed} Mbps`
   );
 
 }
@@ -638,49 +853,42 @@ function offlineMode(){
 
   });
 
-  const status =
-    document.getElementById("status");
-
-  status.className =
+  document.getElementById("status").className =
     "status bad";
 
-  status.innerHTML =
+  document.getElementById("status").innerHTML =
     "🚫 CONNECTION LOST";
 
   playAlert();
 
+  voiceAlert(
+    "Warning. Internet connection lost."
+  );
+
   showAlert();
 
   addLog(
-    "🚫 INTERNET CONNECTION LOST"
+    "🚫 INTERNET LOST"
+  );
+
+  terminalLog(
+    "WARNING: Network disconnected"
   );
 
 }
+
+/* EXPORT */
 
 function exportTXT(){
 
   const content =
 `
-==============================
-ULTIMATE NETWORK REPORT
-==============================
-
-Generated:
-${new Date().toLocaleString()}
+CYBER NETWORK REPORT
 
 Disconnects:
 ${stats.disconnects}
 
-Checks:
-${stats.checks}
-
-Uptime:
-${stats.uptime} cycles
-
-==============================
-LOGS
-==============================
-
+Logs:
 ${networkLogs.join("\n")}
 `;
 
@@ -696,37 +904,20 @@ ${networkLogs.join("\n")}
   const a =
     document.createElement("a");
 
-  a.href = url;
+  a.href=url;
 
   a.download =
     "network-report.txt";
 
   a.click();
 
-  URL.revokeObjectURL(url);
-
 }
 
 function exportJSON(){
 
-  const report = {
+  const data={
 
-    generated:
-      new Date().toLocaleString(),
-
-    stats:{
-
-      disconnects:
-        stats.disconnects,
-
-      checks:
-        stats.checks,
-
-      uptime:
-        stats.uptime
-
-    },
-
+    stats,
     logs:networkLogs
 
   };
@@ -735,7 +926,7 @@ function exportJSON(){
     new Blob(
       [
         JSON.stringify(
-          report,
+          data,
           null,
           2
         )
@@ -751,14 +942,12 @@ function exportJSON(){
   const a =
     document.createElement("a");
 
-  a.href = url;
+  a.href=url;
 
   a.download =
     "network-report.json";
 
   a.click();
-
-  URL.revokeObjectURL(url);
 
 }
 
