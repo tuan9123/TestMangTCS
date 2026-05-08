@@ -1,1 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Network Signal Pro</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#020617;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  transition:0.4s;
+}
+
+body.offline{
+  animation:flash 1s infinite;
+}
+
+@keyframes flash{
+  0%{background:#200;}
+  50%{background:#500;}
+  100%{background:#200;}
+}
+
+.card{
+  width:420px;
+  background:rgba(15,23,42,.95);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:25px;
+  padding:30px;
+  box-shadow:
+    0 0 50px rgba(0,255,255,.1),
+    inset 0 0 20px rgba(255,255,255,.02);
+  position:relative;
+  overflow:hidden;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:radial-gradient(circle,#0ea5e955,transparent);
+  top:-250px;
+  left:-250px;
+}
+
+.title{
+  text-align:center;
+  font-size:30px;
+  font-weight:bold;
+  margin-bottom:25px;
+  color:#38bdf8;
+  z-index:2;
+  position:relative;
+}
+
+.signal-box{
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  gap:10px;
+  height:130px;
+  margin-bottom:25px;
+  position:relative;
+  z-index:2;
+}
+
+.bar{
+  width:24px;
+  border-radius:10px;
+  background:#1e293b;
+  transition:.4s;
+}
+
+.bar.active{
+  background:linear-gradient(to top,#22c55e,#4ade80);
+  box-shadow:0 0 20px #22c55e;
+}
+
+.b1{height:25px;}
+.b2{height:50px;}
+.b3{height:75px;}
+.b4{height:100px;}
+.b5{height:125px;}
+
+.info{
+  background:#0f172a;
+  border-radius:18px;
+  padding:18px;
+  position:relative;
+  z-index:2;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin:14px 0;
+  font-size:17px;
+}
+
+.status{
+  margin-top:20px;
+  text-align:center;
+  padding:15px;
+  border-radius:14px;
+  font-weight:bold;
+  font-size:18px;
+  transition:.4s;
+}
+
+.good{
+  background:rgba(34,197,94,.15);
+  color:#4ade80;
+}
+
+.medium{
+  background:rgba(234,179,8,.15);
+  color:#facc15;
+}
+
+.bad{
+  background:rgba(239,68,68,.15);
+  color:#f87171;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:16px;
+  margin-top:18px;
+  background:#0ea5e9;
+  color:white;
+  font-size:17px;
+  cursor:pointer;
+  transition:.3s;
+  font-weight:bold;
+}
+
+button:hover{
+  transform:scale(1.02);
+  background:#0284c7;
+}
+
+.ping-dot{
+  width:12px;
+  height:12px;
+  background:#22c55e;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:8px;
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.5);}
+  100%{transform:scale(1);}
+}
+
+.alert-popup{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:#ef4444;
+  color:white;
+  padding:15px 20px;
+  border-radius:15px;
+  font-weight:bold;
+  box-shadow:0 0 20px rgba(239,68,68,.5);
+  transform:translateX(400px);
+  transition:.5s;
+  z-index:999;
+}
+
+.alert-popup.show{
+  transform:translateX(0);
+}
+
+.scan-line{
+  position:absolute;
+  width:100%;
+  height:3px;
+  background:rgba(0,255,255,.5);
+  top:0;
+  left:0;
+  animation:scan 4s linear infinite;
+}
+
+@keyframes scan{
+  0%{top:0;}
+  100%{top:100%;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="alert-popup" id="popup">
+🚫 MẤT KẾT NỐI INTERNET
+</div>
+
+<div class="card">
+
+<div class="scan-line"></div>
+
+<div class="title">
+📡 Network Signal Pro
+</div>
+
+<div class="signal-box">
+  <div class="bar b1"></div>
+  <div class="bar b2"></div>
+  <div class="bar b3"></div>
+  <div class="bar b4"></div>
+  <div class="bar b5"></div>
+</div>
+
+<div class="info">
+
+  <div class="row">
+    <span>🌐 Network</span>
+    <span id="networkType">Detecting...</span>
+  </div>
+
+  <div class="row">
+    <span>⚡ Speed</span>
+    <span id="speed">0 Mbps</span>
+  </div>
+
+  <div class="row">
+    <span>📶 Signal</span>
+    <span id="signal">0%</span>
+  </div>
+
+  <div class="row">
+    <span>📍 Ping</span>
+    <span id="ping">
+      <span class="ping-dot"></span>
+      0 ms
+    </span>
+  </div>
+
+</div>
+
+<div class="status good" id="status">
+🚀 Excellent Connection
+</div>
+
+<button onclick="updateNetworkStatus()">
+🔄 Refresh Signal
+</button>
+
+</div>
+
+<script>
+
+const bars = document.querySelectorAll(".bar");
+const popup = document.getElementById("popup");
+
+function random(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+function playAlert(){
+
+  const audio = new Audio(
+    "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+  );
+
+  audio.play();
+}
+
+function showPopup(){
+
+  popup.classList.add("show");
+
+  setTimeout(()=>{
+    popup.classList.remove("show");
+  },3000);
+}
+
+function checkSignal(){
+
+  let speed = random(20,150);
+  let ping = random(5,90);
+  let signal = random(30,100);
+
+  document.getElementById("speed").innerText =
+    speed + " Mbps";
+
+  document.getElementById("signal").innerText =
+    signal + "%";
+
+  document.getElementById("ping").innerHTML =
+    `<span class="ping-dot"></span>${ping} ms`;
+
+  let networks = [
+    "5G",
+    "WiFi 6",
+    "Fiber",
+    "Starlink",
+    "4G LTE"
+  ];
+
+  document.getElementById("networkType").innerText =
+    networks[random(0,networks.length-1)];
+
+  bars.forEach(bar=>{
+    bar.classList.remove("active");
+  });
+
+  let activeBars = Math.ceil(signal / 20);
+
+  for(let i=0;i<activeBars;i++){
+    bars[i].classList.add("active");
+  }
+
+  let status = document.getElementById("status");
+
+  if(signal > 75){
+
+    status.className = "status good";
+    status.innerHTML = "🚀 Excellent Connection";
+
+  }
+  else if(signal > 40){
+
+    status.className = "status medium";
+    status.innerHTML = "⚠️ Medium Connection";
+
+  }
+  else{
+
+    status.className = "status bad";
+    status.innerHTML = "❌ Weak Signal";
+
+  }
+
+}
+
+function offlineMode(){
+
+  document.body.classList.add("offline");
+
+  document.getElementById("networkType").innerText =
+    "Offline";
+
+  document.getElementById("speed").innerText =
+    "0 Mbps";
+
+  document.getElementById("signal").innerText =
+    "0%";
+
+  document.getElementById("ping").innerHTML =
+    `<span class="ping-dot" style="background:red"></span> Timeout`;
+
+  bars.forEach(bar=>{
+    bar.classList.remove("active");
+  });
+
+  const status = document.getElementById("status");
+
+  status.className = "status bad";
+
+  status.innerHTML =
+    "🚫 MẤT KẾT NỐI INTERNET";
+
+  playAlert();
+
+  showPopup();
+
+}
+
+function onlineMode(){
+
+  document.body.classList.remove("offline");
+
+  checkSignal();
+
+}
+
+function updateNetworkStatus(){
+
+  if(!navigator.onLine){
+
+    offlineMode();
+
+  }else{
+
+    onlineMode();
+
+  }
+
+}
+
+window.addEventListener("offline", offlineMode);
+
+window.addEventListener("online", onlineMode);
+
+if(Notification.permission !== "granted"){
+
+  Notification.requestPermission();
+
+}
+
+updateNetworkStatus();
+
+setInterval(updateNetworkStatus,4000);
+
+</script>
+
+</body>
+</html>
